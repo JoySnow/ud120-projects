@@ -9,11 +9,29 @@ from feature_format import featureFormat, targetFeatureSplit
 
 ### read in data dictionary, convert to numpy array
 data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
+data_dict.pop("TOTAL")
+
+for k in data_dict:
+    print k
+
 features = ["salary", "bonus"]
 data = featureFormat(data_dict, features)
 
 
 ### your code below
 
+print len(data)
+#print dir(matplotlib.pyplot)
+#print matplotlib.pyplot.__doc__
 
 
+
+
+for point in data:
+    salary = point[0]
+    bonus = point[1]
+    matplotlib.pyplot.scatter( salary, bonus )
+
+matplotlib.pyplot.xlabel("salary")
+matplotlib.pyplot.ylabel("bonus")
+matplotlib.pyplot.show()

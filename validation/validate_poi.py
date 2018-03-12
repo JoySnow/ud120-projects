@@ -26,7 +26,23 @@ data = featureFormat(data_dict, features_list)
 labels, features = targetFeatureSplit(data)
 
 
+from sklearn.cross_validation import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
 
-### it's all yours from here forward!  
+### it's all yours from here forward!
 
+## version 1
+#from sklearn import tree
+#
+#clf = tree.DecisionTreeClassifier()
+#clf.fit( features, labels )
+#
+#print clf.score( features, labels )
 
+### version 2
+from sklearn import tree
+
+clf = tree.DecisionTreeClassifier()
+clf.fit( x_train, y_train )
+
+print clf.score( x_test, y_test)

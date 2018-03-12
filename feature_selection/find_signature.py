@@ -28,6 +28,9 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5,
 features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
 
+fn = vectorizer.get_feature_names()
+print fn[33614]
+
 
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
@@ -39,5 +42,22 @@ labels_train   = labels_train[:150]
 
 ### your code goes here
 
+from sklearn.tree import DecisionTreeClassifier
 
+clf = DecisionTreeClassifier()
+clf.fit(features_train, labels_train)
+print clf.score( features_test, labels_test )
 
+fi = clf.feature_importances_
+print fi
+import numpy
+std = numpy.float64(0.2)
+for i in xrange(0, len(fi)):
+#for item in fi:
+#    print "type of item: ", type(item)
+#    print item
+    #if type(item) == "float" and item > "0.2":
+    if fi[i] > std:
+        print fi[i], i, fn[i]
+
+print clf.max_features_

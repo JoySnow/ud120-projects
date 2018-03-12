@@ -27,7 +27,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.datasets import fetch_lfw_people
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, f1_score
 from sklearn.decomposition import RandomizedPCA
 from sklearn.svm import SVC
 
@@ -41,17 +41,21 @@ lfw_people = fetch_lfw_people(min_faces_per_person=70, resize=0.4)
 
 # introspect the images arrays to find the shapes (for plotting)
 n_samples, h, w = lfw_people.images.shape
+print "QQQ n_samples, h, w : ", n_samples, h, w
 np.random.seed(42)
 
 # for machine learning we use the data directly (as relative pixel
 # position info is ignored by this model)
 X = lfw_people.data
+print "QQQ len of lfw_people.data: ", len(X)
+print "QQQ len of lfw_people.data.shape: ", len(X.shape)
 n_features = X.shape[1]
 
 # the label to predict is the id of the person
 y = lfw_people.target
 target_names = lfw_people.target_names
 n_classes = target_names.shape[0]
+print "QQQ n_classes: ", n_classes
 
 print "Total dataset size:"
 print "n_samples: %d" % n_samples
@@ -66,7 +70,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random
 ###############################################################################
 # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
 # dataset): unsupervised feature extraction / dimensionality reduction
-n_components = 150
+#n_components = 150
+#n_components = 10
+n_components = 100
 
 print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
 t0 = time()
@@ -109,6 +115,10 @@ print "done in %0.3fs" % (time() - t0)
 
 print classification_report(y_test, y_pred, target_names=target_names)
 print confusion_matrix(y_test, y_pred, labels=range(n_classes))
+C = confusion_matrix(y_test, y_pred, labels=range(n_classes))
+normalized_C = C / C.astype(np.float).sum(axis=1)
+print normalized_C
+print f1_score(y_test, y_pred,  average='weighted')
 
 
 ###############################################################################
